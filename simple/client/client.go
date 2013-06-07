@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/skynetservices/skynet"
-	"github.com/skynetservices/skynet/client"
+	"github.com/skynetservices/skynet2"
+	"github.com/skynetservices/skynet2/client"
 )
 
 func main() {
