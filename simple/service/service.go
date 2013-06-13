@@ -5,6 +5,7 @@ import (
 	"github.com/skynetservices/skynet2/log"
 	"github.com/skynetservices/skynet2/service"
 	"github.com/skynetservices/zkmanager"
+	"os"
 	"strings"
 	"time"
 )
@@ -29,7 +30,7 @@ func (s *TestService) Upcase(requestInfo *skynet.RequestInfo, in map[string]inte
 
 func main() {
 	log.SetLogLevel(log.DEBUG)
-	skynet.SetServiceManager(zkmanager.NewZookeeperServiceManager("127.0.0.1:2181", 1*time.Second))
+	skynet.SetServiceManager(zkmanager.NewZookeeperServiceManager(os.Getenv("SKYNET_ZOOKEEPER"), 1*time.Second))
 
 	testService := NewTestService()
 
