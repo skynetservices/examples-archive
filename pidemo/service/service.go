@@ -36,7 +36,7 @@ func (r *LedReporter) MethodCompleted(method string, duration int64, err error) 
 }
 
 func (r *LedReporter) watch() {
-	var t *time.Ticker
+	var t *time.Ticker = time.NewTicker(1 * time.Minute)
 
 	for {
 		select {
@@ -44,6 +44,8 @@ func (r *LedReporter) watch() {
 			if t != nil {
 				t.Stop()
 			}
+
+			led.Off()
 
 			switch color {
 			case RED:
@@ -56,6 +58,8 @@ func (r *LedReporter) watch() {
 
 			t = time.NewTicker(150 * time.Millisecond)
 		case <-t.C:
+			led.Off()
+
 			if registered {
 				led.Blue(true)
 			} else {
@@ -66,7 +70,9 @@ func (r *LedReporter) watch() {
 }
 
 func NewLedReporter() (r *LedReporter) {
-	r = &LedReporter{}
+	r = &LedReporter{
+		blinkChan: make(chan int, 1000),
+	}
 	go r.watch()
 
 	return
