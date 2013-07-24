@@ -15,7 +15,8 @@ var led *LED = NewLED()
 var registered bool
 
 const (
-	RED = iota
+	OFF = iota
+	RED
 	GREEN
 	BLUE
 )
@@ -35,12 +36,14 @@ func (r *LedReporter) MethodCompleted(method string, duration int64, err error) 
 }
 
 func (r *LedReporter) watch() {
-	var t *time.Ticker = time.NewTicker(1 * time.Second)
+	var t *time.Ticker
 
 	for {
 		select {
 		case color := <-r.blinkChan:
-			t.Stop()
+			if t != nil {
+				t.Stop()
+			}
 
 			switch color {
 			case RED:
@@ -51,7 +54,7 @@ func (r *LedReporter) watch() {
 				led.Green(true)
 			}
 
-			t = time.NewTicker(250 * time.Millisecond)
+			t = time.NewTicker(150 * time.Millisecond)
 		case <-t.C:
 			if registered {
 				led.Blue(true)
