@@ -11,17 +11,6 @@ const (
 	BLUE_PIN  = "24"
 )
 
-func init() {
-	exportPin(RED_PIN)
-	exportPin(GREEN_PIN)
-	exportPin(BLUE_PIN)
-
-	setPinDirection(RED_PIN)
-	setPinDirection(GREEN_PIN)
-	setPinDirection(BLUE_PIN)
-
-}
-
 type LED struct {
 	redPin *os.File
 	redOn  bool
@@ -36,6 +25,14 @@ type LED struct {
 func NewLED() *LED {
 	led := &LED{}
 	var err error
+
+	exportPin(RED_PIN)
+	exportPin(GREEN_PIN)
+	exportPin(BLUE_PIN)
+
+	setPinDirection(RED_PIN)
+	setPinDirection(GREEN_PIN)
+	setPinDirection(BLUE_PIN)
 
 	led.redPin, err = os.OpenFile("/sys/class/gpio/gpio"+RED_PIN+"/value", os.O_WRONLY|os.O_TRUNC, 755)
 	if err != nil {
