@@ -56,7 +56,7 @@ func (r *LedReporter) watch() {
 				led.Green(true)
 			}
 
-			t = time.NewTicker(150 * time.Millisecond)
+			t = time.NewTicker(100 * time.Millisecond)
 		case <-t.C:
 			led.Off()
 
@@ -71,7 +71,7 @@ func (r *LedReporter) watch() {
 
 func NewLedReporter() (r *LedReporter) {
 	r = &LedReporter{
-		blinkChan: make(chan int, 1000),
+		blinkChan: make(chan int, 10000),
 	}
 	go r.watch()
 
