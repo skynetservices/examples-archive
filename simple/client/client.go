@@ -15,12 +15,12 @@ func main() {
 
 	var err error
 
-	client := client.NewClient(config)
+	client.SetConfig(*config)
 
 	// This will not fail if no services currently exist, as
 	// connections are created on demand this saves from chicken and
 	// egg issues with dependencies between services
-	service := client.GetService(&skynet.Criteria{
+	service := client.GetServiceFromCriteria(&skynet.Criteria{
 		Services: []skynet.ServiceCriteria{
 			skynet.ServiceCriteria{Name: "TestService"},
 		},

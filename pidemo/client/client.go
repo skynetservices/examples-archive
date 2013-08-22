@@ -23,7 +23,7 @@ var successfulRequests = expvar.NewInt("successful-requests")
 
 var requests int
 var goMaxProcs int
-var piDemoClient *client.ServiceClient
+var piDemoClient client.ServiceClientProvider
 
 func main() {
 	flagset := flag.NewFlagSet("pidemo", flag.ContinueOnError)
@@ -45,9 +45,9 @@ func main() {
 	flagset.Parse(pidemoArgs)
 
 	config, _ := skynet.GetClientConfigFromFlags(args)
-	skynetClient := client.NewClient(config)
+	client.SetConfig(*config)
 
-	piDemoClient = skynetClient.GetService(&skynet.Criteria{
+	piDemoClient = client.GetServiceFromCriteria(&skynet.Criteria{
 		Services: []skynet.ServiceCriteria{
 			skynet.ServiceCriteria{Name: "PiDemoService"},
 		},
