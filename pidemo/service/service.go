@@ -5,8 +5,7 @@ import (
 	"github.com/skynetservices/skynet2/log"
 	"github.com/skynetservices/skynet2/service"
 	"github.com/skynetservices/skynet2/stats"
-	"github.com/skynetservices/zkmanager"
-	"os"
+	_ "github.com/skynetservices/zkmanager"
 	"strings"
 	"time"
 )
@@ -105,28 +104,13 @@ func (s *PiDemoService) Upcase(requestInfo *skynet.RequestInfo, in map[string]in
 }
 
 func main() {
-	log.SetLogLevel(log.DEBUG)
 	stats.AddReporter(NewLedReporter())
-
-	skynet.SetServiceManager(zkmanager.NewZookeeperServiceManager(os.Getenv("SKYNET_ZOOKEEPER"), 1*time.Second))
 
 	testService := NewPiDemoService()
 
-	config, _ := skynet.GetServiceConfig()
+	serviceInfo := skynet.NewServiceInfo("PiDemoService", "1.0.0")
 
-	if config.Name == "" {
-		config.Name = "PiDemoService"
-	}
-
-	if config.Version == "unknown" {
-		config.Version = "1"
-	}
-
-	if config.Region == "unknown" {
-		config.Region = "Clearwater"
-	}
-
-	service := service.CreateService(testService, config)
+	service := service.CreateService(testService, serviceInfo)
 
 	// handle panic so that we remove ourselves from the pool in case
 	// of catastrophic failure
