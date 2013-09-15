@@ -34,21 +34,9 @@ func main() {
 
 	testService := NewTestService()
 
-	config, _ := skynet.GetServiceConfig()
+	serviceInfo := skynet.NewServiceInfo("TestService", "1.0.0")
 
-	if config.Name == "" {
-		config.Name = "TestService"
-	}
-
-	if config.Version == "unknown" {
-		config.Version = "1"
-	}
-
-	if config.Region == "unknown" {
-		config.Region = "Clearwater"
-	}
-
-	service := service.CreateService(testService, config)
+	service := service.CreateService(testService, serviceInfo)
 
 	// handle panic so that we remove ourselves from the pool in case
 	// of catastrophic failure
