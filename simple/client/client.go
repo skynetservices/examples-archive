@@ -2,30 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/skynetservices/skynet2"
 	"github.com/skynetservices/skynet2/client"
-	"github.com/skynetservices/zkmanager"
-	"os"
-	"time"
+	_ "github.com/skynetservices/zkmanager"
 )
 
 func main() {
-	skynet.SetServiceManager(zkmanager.NewZookeeperServiceManager(os.Getenv("SKYNET_ZOOKEEPER"), 1*time.Second))
-	config, _ := skynet.GetClientConfig()
-
-	var err error
-
-	client.SetConfig(*config)
-
-	// This will not fail if no services currently exist, as
-	// connections are created on demand this saves from chicken and
-	// egg issues with dependencies between services
-	service := client.GetServiceFromCriteria(&skynet.Criteria{
-		Services: []skynet.ServiceCriteria{
-			skynet.ServiceCriteria{Name: "TestService"},
-		},
-	})
 	// (any version, any region, any host)
+	service := client.GetService("TestService", "", "", "")
 
 	// This on the other hand will fail if it can't find a service to
 	// connect to
@@ -33,7 +16,7 @@ func main() {
 		"data": "Upcase me!!",
 	}
 	out := map[string]interface{}{}
-	err = service.Send(nil, "Upcase", in, &out)
+	err := service.Send(nil, "Upcase", in, &out)
 
 	if err != nil {
 		fmt.Println(err)

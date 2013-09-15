@@ -4,9 +4,9 @@ import (
 	"expvar"
 	"flag"
 	"fmt"
-	"github.com/skynetservices/skynet2"
 	"github.com/skynetservices/skynet2/client"
-	"github.com/skynetservices/zkmanager"
+	"github.com/skynetservices/skynet2/config"
+	_ "github.com/skynetservices/zkmanager"
 	"math/rand"
 	"os"
 	"os/signal"
@@ -31,7 +31,6 @@ func main() {
 	flagset.IntVar(&goMaxProcs, "maxprocs", 1, "GOMAXPROCS")
 
 	runtime.GOMAXPROCS(goMaxProcs)
-	skynet.SetServiceManager(zkmanager.NewZookeeperServiceManager(os.Getenv("SKYNET_ZOOKEEPER"), 1*time.Second))
 
 	c := make(chan os.Signal, 1)
 	quitChan := make(chan bool, 1)
@@ -41,17 +40,10 @@ func main() {
 
 	go watchSignals(c, quitChan)
 
-	pidemoArgs, args := skynet.SplitFlagsetFromArgs(flagset, os.Args[1:])
+	pidemoArgs, _ := config.SplitFlagsetFromArgs(flagset, os.Args[1:])
 	flagset.Parse(pidemoArgs)
 
-	config, _ := skynet.GetClientConfigFromFlags(args)
-	client.SetConfig(*config)
-
-	piDemoClient = client.GetServiceFromCriteria(&skynet.Criteria{
-		Services: []skynet.ServiceCriteria{
-			skynet.ServiceCriteria{Name: "PiDemoService"},
-		},
-	})
+	piDemoClient = client.GetService("PiDemoService", "", "", "")
 
 	startTime := time.Now().UnixNano()
 	fmt.Printf("Starting %d Workers\n", requests)
