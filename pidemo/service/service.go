@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/skynetservices/skynet2"
-	"github.com/skynetservices/skynet2/log"
-	"github.com/skynetservices/skynet2/service"
-	"github.com/skynetservices/skynet2/stats"
+	"github.com/skynetservices/skynet"
+	"github.com/skynetservices/skynet/log"
+	"github.com/skynetservices/skynet/service"
+	"github.com/skynetservices/skynet/stats"
 	_ "github.com/skynetservices/zkmanager"
 	"strings"
 	"time"
